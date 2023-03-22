@@ -1,0 +1,117 @@
+body {
+    background: url(../img/back.jpg);
+    background-size: cover;
+    font-size: 20px; 
+    vertical-align: middle;
+    font-family: Arial
+}
+
+.container {
+    margin: auto;
+    width: 620px;
+    height: 100%;
+    margin-top: 15%;
+    border: 7px;
+    box-shadow: inset 0 0 15px rgb(87, 179, 255);
+    border-radius: 10px;
+    padding: 15px;
+    background-color: rgba(51, 51, 51, 0.801);
+}
+
+.errorlist {
+    color: red;
+}
+
+.col {
+    float: left;
+    width: 300px;
+}
+
+.row {
+    margin: 10px;
+}
+
+.form-style {
+    height: 50px;
+    width: 300px;
+    background-color: white;
+    border: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.247);
+}
+
+.value-field {
+    height: 80px;
+    width: 300px;
+    background-color: white;
+    border: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.247);
+}
+
+.label {
+    margin-left: 15px;
+}
+
+.select-field {
+    border-style: solid;
+    border-color: rgba(56, 56, 56, 0.422);
+    border-radius: 10px;
+    background-color: rgba(75, 75, 75, 0.202);
+    height: 40px;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-left: 10px;
+    width: 100px;
+    text-align: center
+}
+
+.input {
+    border-style: none;
+    outline: none;
+    height: 40px;
+    font-size: 26px;
+    margin-top: 15px;
+    margin-left: 15px;
+    font-family: Arial
+}
+
+.output {
+    height: 40px;
+    font-size: 26px;
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.btn {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    height: 50px;
+    font-size: 18px;
+    background: rgba(83, 83, 83, 0.803);
+    border-color: rgb(0, 0, 0);
+    color: white;
+}
+
+.datetime {
+    font-size: 14px;
+    color: white;
+    margin-left: 200px;
+    margin-top: 25px;
+}
+
+.col-2 {
+    float: left;
+}
+
+.row-2:after {
+    content: "";
+    display: table;
+    clear: both;
+}

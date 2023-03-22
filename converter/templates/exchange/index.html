@@ -1,0 +1,75 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+
+
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер</title>
+</head>
+<body>
+    <div class="container">
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col">
+                    <div class="form-style">
+                        <label class="label" for="base_curr">У меня есть:</label>
+                        <select class="select-field" name="base_curr" id="base_curr" value="{{ base_curr }}">
+                            {% for curr in curr_rate %}
+                                <option value="{{curr}}" {% if base_curr == curr %}selected{% endif %}>
+                                    {{ curr }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="value-field">
+                        <input class="input" type="number" step="0.01" id="amount_input" placeholder="Введите сумму" {% if amount_input %} value="{{ amount_input }}" {% endif %} name="amount_input">
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <div class="form-style">
+                        <label class="label" for="quote_curr">Хочу приобрести:</label>
+                        <select class="select-field" name="quote_curr" id="quote_curr" value="{{ quote_curr }}">
+                            {% for curr in curr_rate %}
+                                <option value="{{curr}}" {% if quote_curr == curr %}selected{% endif %}>
+                                    {{ curr }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="value-field">
+                        {% if amount_out %}
+                            <div class="output">{{ amount_out }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row-2">
+                <div class="col-2">
+                    <button class="btn">
+                        Рассчитать
+                    </button>
+                </div>
+                
+                <div class="col-2">
+                    <div class="datetime">
+                        Данные за {{date_time}}
+                    </div>
+                </div> 
+            </div>
+            
+        </form>
+            
+    </div>
+</body>
