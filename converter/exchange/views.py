@@ -1,35 +1,58 @@
 from django.shortcuts import render
 import requests
-from decimal import Decimal as D
+
+from .forms import ExchangeForm
+from .models import ExchangeMarket
+
+
+def get_api_data(market, api):
+    if market == "ЦБ РФ":
+        date_time = api.get('Timestamp')[:10]
+        curr_rate = api.get("Valute")
+        curr_rate["RUB"] = {"Nominal": 1, "Value": 1}
+    
+    elif market == "Forex":
+        curr_rate = api.get('rates')
+        date_time = api.get('date')
+
+    return curr_rate, date_time
 
 
 def currency_calculator(request):
-    api = requests.get(url='https://www.cbr-xml-daily.ru/daily_json.js').json()
-
-    date_time = api.get('Timestamp')
-
-    curr_rate = api.get("Valute")
-    curr_rate["RUB"] = {"Name": "Российский рубль", "Value": 1}
-    curr_rate = dict(sorted(curr_rate.items()))
-   
-
-    if request.method == 'GET':
-        form = {'curr_rate': curr_rate, 'date_time': date_time}
-        return render(request, 'exchange/index.html', context=form)
-
+    data = dict()
+    for item in ExchangeMarket.objects.all():
+        api_data = requests.get(url=item.api_url).json()
+        data[item.marketname] = api_data
+    
     if request.method == 'POST':
-        base_curr = request.POST.get('base_curr')
-        quote_curr = request.POST.get('quote_curr')
-        amount_input = request.POST.get('amount_input')
+        form = ExchangeForm(request.POST)
 
-        amount_out = round(D(amount_input) * D(curr_rate[base_curr]['Value']) / D(curr_rate[quote_curr]['Value']), 2)
+        if form.is_valid():
+            response = form.cleaned_data
+            market = str(response['marketname'])
+            amount_input = response['amount_input']
+            api = data[market]
 
-        form = {'base_curr': base_curr,
-                'quote_curr': quote_curr,
-                'amount_input': amount_input,
-                'amount_out': amount_out,
-                'curr_rate': curr_rate,
-                'date_time': date_time
-        }
+            curr_rates, date_time = get_api_data(market, api)
 
-        return render(request, 'exchange/index.html', context=form)
+            base_curr = curr_rates[response['base_curr']]
+            quote_curr = curr_rates[response['quote_curr']]
+
+            if market == 'ЦБ РФ':
+                amount_out = round(amount_input * (base_curr['Value'] * quote_curr['Nominal'] / (quote_curr['Value'] * base_curr['Nominal'])), 4)
+                
+            elif market == 'Forex':
+                amount_out = round(amount_input * (quote_curr / base_curr), 4)
+
+            context = {'form': form, 
+                       'amount_out': amount_out, 
+                       'curr_rates': curr_rates,
+                       'date_time': date_time}
+            
+            return render(request, 'exchange/index.html', context=context)
+    
+    else:
+        form = ExchangeForm()
+        context = {'form': form}
+    
+    return render(request, 'exchange/index.html', context=context)

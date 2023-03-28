@@ -19,5 +19,5 @@ from exchange.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', currency_calculator, name='home')
+    path('', currency_calculator, name='index'),
 ]
